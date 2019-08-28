@@ -1,0 +1,61 @@
+version: "3"
+services:
+  reverse-proxy:
+    image: traefik
+    command: --api --docker
+    ports:
+      - "80:80"
+      - "443:443"
+    networks: 
+      - web  
+    labels:
+      - "traefik.port=8080" 
+      - "traefik.basic.frontend.rule=Host:monitor.stream01.tscinc.co"  
+    volumes: 
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./data/traefik/traefik.toml:/traefik.toml:ro
+      - ./data/traefik/acme.json:/acme.json
+        
+  nginx-rtmp-a:
+    restart: unless-stopped
+    ports:
+      - '1935:1935' 
+    environment:
+      - 'RTMP_STREAM_NAMES=channel_a'
+    networks:
+      - web
+    labels:
+      - "traefik.port=8080" 
+      - "traefik.basic.frontend.rule=Host:hls-a.stream01.tscinc.co"
+    image: jasonrivers/nginx-rtmp
+
+    nginx-rtmp-b:
+    restart: unless-stopped
+    ports:
+      - '1936:1935' 
+    environment:
+      - 'RTMP_STREAM_NAMES=channel_b'
+    networks:
+      - web
+    labels:
+      - "traefik.port=8080" 
+      - "traefik.basic.frontend.rule=Host:hls-b.stream01.tscinc.co"
+    image: jasonrivers/nginx-rtmp
+  
+  nginx-rtmp-c:
+    restart: unless-stopped
+    ports:
+      - '1937:1935' 
+    environment:
+      - 'RTMP_STREAM_NAMES=channel_c'
+    networks:
+      - web
+    labels:
+      - "traefik.port=8080" 
+      - "traefik.basic.frontend.rule=Host:hls-c.stream01.tscinc.co"
+    image: jasonrivers/nginx-rtmp
+
+networks:
+  web:
+    external: true
+  
