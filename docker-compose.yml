@@ -18,41 +18,15 @@ services:
         
   nginx-rtmp-a:
     restart: unless-stopped
-    ports:
-      - '1935:1935' 
     environment:
-      - 'RTMP_STREAM_NAMES=channel_a'
+      - "RTMP_STREAM_NAMES=channel_a,channel_b,channel_c"
+    ports:
+      - "1935:1935"
     networks:
       - web
     labels:
-      - "traefik.port=8080" 
-      - "traefik.basic.frontend.rule=Host:hls-a.stream01.tscinc.co"
-    image: jasonrivers/nginx-rtmp
-
-  nginx-rtmp-b:
-    restart: unless-stopped
-    ports:
-      - '1936:1935' 
-    environment:
-      - 'RTMP_STREAM_NAMES=channel_b'
-    networks:
-      - web
-    labels:
-      - "traefik.port=8080" 
-      - "traefik.basic.frontend.rule=Host:hls-b.stream01.tscinc.co"
-    image: jasonrivers/nginx-rtmp
-  
-  nginx-rtmp-c:
-    restart: unless-stopped
-    ports:
-      - '1937:1935' 
-    environment:
-      - 'RTMP_STREAM_NAMES=channel_c'
-    networks:
-      - web
-    labels:
-      - "traefik.port=8080" 
-      - "traefik.basic.frontend.rule=Host:hls-c.stream01.tscinc.co"
+      - "traefik.port=8080"
+      - "traefik.basic.frontend.rule=Host:hls.stream01.tscinc.co"
     image: jasonrivers/nginx-rtmp
 
 networks:
