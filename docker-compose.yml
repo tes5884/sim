@@ -29,7 +29,7 @@ services:
       - "traefik.basic.frontend.rule=Host:hls-a.stream01.tscinc.co"
     image: jasonrivers/nginx-rtmp
 
-    nginx-rtmp-b:
+  nginx-rtmp-b:
     restart: unless-stopped
     ports:
       - '1936:1935' 
